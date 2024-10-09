@@ -5,11 +5,12 @@ import { comparePassword, hashPassword } from "../utilities/Password.js";
 
 const EmailVerify = async (req, res) => {
   const { otp } = req.body;
-  const { userId } = req.params;
+  const { email } = req.params;
 
   try {
     // Find the user by ID
-    const user = await User.findById(userId);
+    const user = await User.findByOne({email});
+    const userId = user._id.toString()
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }

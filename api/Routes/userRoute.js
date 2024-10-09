@@ -14,7 +14,7 @@ const userRoute = express.Router();
 
 // Define the POST route for creating a new user
 userRoute.post("/register", createUser);
-userRoute.post("/verify/:userId", EmailVerify)
+userRoute.post("/verify/:email", EmailVerify)
 userRoute.post("/login", login)
 userRoute.post("/reqPass/:email", forgotPass)
 userRoute.post("/forgotPass/:token/:userId/:forId", reqPass)
