@@ -1,4 +1,5 @@
 import Forpass from "../Models/ForgotPassword.js";
+import User from "../Models/UserSchema.js";
 import { userAvailability } from "../utilities/CheckUser.js";
 import sendmail from "../utilities/EmailSender.js";
 import { hashPassword } from "../utilities/Password.js";
@@ -6,11 +7,12 @@ import { TokenGen } from "../utilities/TokenGen.js";
 
 
 export const forgotPass = async(req,res)=>{
-    const {userId} = req.params
+    const {email} = req.params
 
     try {
-        const user = await userAvailability(userId)
+        const user = await User.findOne({email})
         if(!user) res.status(404).json({message:"user not found"});
+        const userId = user._id.toString()
         const token = TokenGen(userId)
 
         const forPass = new Forpass({
@@ -19,7 +21,7 @@ export const forgotPass = async(req,res)=>{
         })
 
         await forPass.save()
-        await sendmail(user.email, "Forgot Password", `Click on the following link to reset your password http://localhost/api/user/forgotPass/${token}/${userId}/${forPass._id}`)
+        await sendmail(user.email, "Forgot Password", `Click on the following link to reset your password http://localhost:3000/forgotPass/${token}/${userId}/${forPass._id}`)
         return res.status(200).json({message:"Email Sent successfully"})
 
     } catch (error) {

@@ -16,7 +16,7 @@ const userRoute = express.Router();
 userRoute.post("/register", createUser);
 userRoute.post("/verify/:userId", EmailVerify)
 userRoute.post("/login", login)
-userRoute.post("/reqPass/:userId", forgotPass)
+userRoute.post("/reqPass/:email", forgotPass)
 userRoute.post("/forgotPass/:token/:userId/:forId", reqPass)
 userRoute.post("/createPass/:userId", authMiddleware, createPass)
 userRoute.post("/updateUser/:userId",authMiddleware, updateUser)
