@@ -8,9 +8,9 @@ const EmailVerify = async (req, res) => {
   const { email } = req.params;
 
   try {
-    // Find the user by ID
-    const user = await User.findByOne({email});
-    const userId = user._id.toString()
+    // Find the user by email
+    const user = await User.findOne({ email });
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -20,13 +20,17 @@ const EmailVerify = async (req, res) => {
       return res.status(400).json({ message: "Email is already verified" });
     }
 
+    const userId = user._id.toString();
+
     // Find the email verification record
     const verify = await EmailVerifi.findOne({ userId });
+
     if (!verify) {
-      // If no verification record exists, generate a new OTP and resend it
+      // Generate and send a new OTP
       const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
-      const hashedOtp = await hashPassword(newOtp); // Don't forget to await this
-      await sendMail(user.email, newOtp); // Send the new OTP
+      const hashedOtp = await hashPassword(newOtp); 
+
+      await sendMail(user.email, newOtp); // Send new OTP via email
 
       // Create a new verification record
       const emailVeri = new EmailVerifi({
@@ -39,16 +43,17 @@ const EmailVerify = async (req, res) => {
       return res.status(400).json({ message: "New OTP sent. Please try again." });
     }
 
-    // Compare the OTP with the hashed OTP
+    // Compare provided OTP with the hashed OTP
     const isMatch = await comparePassword(otp, verify.otp);
     if (!isMatch) {
       return res.status(401).json({ message: "Incorrect OTP" });
     }
 
     // Mark the user as verified
-    await user.updateOne({ isVerified: true });
+    user.isVerified = true;
+    await user.save(); // Save the updated user record
 
-    // Optionally, delete the verification record after successful verification
+    // Delete the verification record
     await EmailVerifi.deleteOne({ userId });
 
     // Send success response
