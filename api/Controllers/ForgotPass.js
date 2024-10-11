@@ -21,7 +21,7 @@ export const forgotPass = async(req,res)=>{
         })
 
         await forPass.save()
-        await sendmail(user.email, "Forgot Password", `Click on the following link to reset your password https://passbay.onrender.com/forgotPass/${token}/${userId}/${forPass._id}`)
+        await sendmail(user.email, "Forgot Password", `Click on the following link to reset your password https://contactme-pearl.vercel.app/forgotPass/${token}/${userId}/${forPass._id}`)
         return res.status(200).json({message:"Email Sent successfully"})
 
     } catch (error) {
