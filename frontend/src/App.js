@@ -12,7 +12,7 @@ import HomeLayout from './Layout/HomeLayout';
 
 function App() {
     const nav = useNavigate();
-    const baseUrl = `http://localhost:5000/api/user`;
+    const baseUrl = `https://manger-wq3u.onrender.com/api/user`;
     const [isAuthenticated, setAuthenticate] = useState(false);
     const [userData, setUserdata] = useState();
     const [loading, setLoading] = useState(true); // Added loading state
